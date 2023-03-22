@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { submitForm } from '../../store/slices/destinationSlice';
 import { Form, Card, Button } from 'react-bootstrap';
 import './destinationForm.style.css'; // import the CSS file
@@ -26,6 +26,8 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
 
 const DestinationForm = ({ handleSubmit, submitting, pristine }) => {
   const dispatch = useDispatch();
+  const { loading, tips, error: tipsError } = useSelector((state) => state.travelTips);
+  const { isLoading, itinerary, error: itineraryError } = useSelector((state) => state.travelItinerary);
 
   const submit = values => {
     dispatch(submitForm(values));
@@ -35,14 +37,18 @@ const DestinationForm = ({ handleSubmit, submitting, pristine }) => {
     <>
       <Form className="form-container" onSubmit={handleSubmit(submit)}>
         <Field name="destination" component={renderField} label="Destination Name" type="text" />
-        <Field name="duration" component={renderField} label="Duration of Stay" type="text" />
+        <Field name="duration" component={renderField} label="Duration of Stay (Days)" type="text" />
         <Button className="btn-submit" type="submit" disabled={submitting || pristine}>Submit</Button>
       </Form>
 
       <Card border="info">
         <Card.Header as="h6">ITINERARY</Card.Header>
         <Card.Body>
-          <Card.Text>... </Card.Text>
+          <Card.Text>
+            {isLoading && <p>Loading itinerary...</p>}
+            {itinerary && <p>{itinerary}</p>}
+            {itineraryError && <p>{itineraryError}</p>}
+          </Card.Text>
         </Card.Body>
       </Card>
 
@@ -50,7 +56,11 @@ const DestinationForm = ({ handleSubmit, submitting, pristine }) => {
       <Card border="warning">
         <Card.Header as="h6">TRAVEL TIPS</Card.Header>
         <Card.Body>
-          <Card.Text>...</Card.Text>
+          <Card.Text>
+            {loading && <p>Loading tips...</p>}
+            {tips && <p>{tips}</p>}
+            {tipsError && <p>{tipsError}</p>}
+          </Card.Text>
         </Card.Body>
       </Card>
     </>

@@ -1,31 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+const { Configuration, OpenAIApi } = require("openai");
 
-// The URL for the ChatGPT API endpoint
-const CHATGPT_API_URL = 'https://api.chatgpt.com';
 // The API token for the ChatGPT API (replace with your own token)
-const CHATGPT_API_TOKEN = process.env.REACT_APP_CHATGPT_API_TOKEN;
+const configuration = new Configuration({
+  apiKey: process.env.REACT_APP_OPENAI_API_TOKEN,
+});
 
 // This thunk will make a POST request to the ChatGPT API with the provided payload
 export const fetchTravelItinerary = createAsyncThunk(
   'travelItinerary/fetch',
   async ({ destination, duration }) => {
-    // Send a POST request to the ChatGPT API endpoint with the payload data
-    const response = await axios.post(
-      `${CHATGPT_API_URL}/generate`,
-      {
-        // Include the API token in the request data
-        token: CHATGPT_API_TOKEN,
-        // Set the prompt to include the destination and duration
-        prompt: `Create a travel itinerary for a trip to ${destination} for ${duration} days`,
-        // Set the maximum length of the generated response
-        length: 100,
-        // Set the temperature to control the randomness of the generated response
-        temperature: 0.7,
-      }
-    );
+    const openai = new OpenAIApi(configuration);
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      // Set the prompt to include the destination and duration
+      prompt: `Create a travel itinerary for a trip to ${destination} for ${duration} days`,
+      max_tokens: 300,
+      // Set the temperature to control the randomness of the generated response
+      temperature: 0.7,
+    });
     // Return the generated response as the payload of the thunk
-    return response.data;
+    return response.data.choices[0].text.trim();
   }
 );
 

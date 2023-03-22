@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { showToast, hideToast } from './toastSlice';
 import { logQuery } from './queryLogSlice';
+import { fetchTravelTips } from './travelTipsSlice';
+import { fetchTravelItinerary } from './travelItinerarySlice'
 
 const initialState = {
   loading: false,
@@ -47,15 +49,21 @@ export const submitForm = (values) => async (dispatch) => {
   const ipAddress = response.data.ip;
   
   try {
-    // Make a POST request to the server with the form data
-    const response = await axios.post('/api/destinations', { destination, duration });
+    // Make a request to the ChatGPT server with the form data
+    dispatch(fetchTravelItinerary({ destination, duration }));
+    dispatch(fetchTravelTips(destination));
+    
     // Dispatch logQuery action with the appropriate payload
     dispatch(logQuery({ ipAddress, destination, duration, createdBy: 'user' }));
-    dispatch(fetchDestinationsSuccess(response.data)); // Dispatch the fetchDestinationsSuccess action with the response data
+
+    // Dispatch the fetchDestinationsSuccess action with the response data
+    dispatch(fetchDestinationsSuccess(response.data)); 
     dispatch(showToast({ type: 'success', message: 'Destination added successfully' })); // Dispatch the showToast action with a success message
   } catch (error) {
-    dispatch(fetchDestinationsFailure(error.message)); // Dispatch the fetchDestinationsFailure action with the error message
-    dispatch(showToast({ type: 'error', message: 'Failed to add destination' })); // Dispatch the showToast action with an error message
+    // Dispatch the fetchDestinationsFailure action with the error message
+    dispatch(fetchDestinationsFailure(error.message)); 
+    // Dispatch the showToast action with an error message
+    dispatch(showToast({ type: 'error', message: error.message }));
   } finally {
     // Hide the toast message after 3 seconds
     setTimeout(() => {
