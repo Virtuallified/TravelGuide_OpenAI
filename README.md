@@ -48,6 +48,9 @@ The project has the following file structure:
 │ ├── index.html
 │ └── ...
 ├── src
+│ ├── _tests_
+│ │ ├── components
+│ │ │ ├── Toaster.test.jsx
 │ ├── components
 │ │ ├── containers
 │ │ │ ├── DestinationForm.jsx
