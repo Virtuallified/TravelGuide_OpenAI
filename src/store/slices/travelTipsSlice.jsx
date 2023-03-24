@@ -38,6 +38,7 @@ const travelTipsSlice = createSlice({
   initialState: {
     destination: null,
     tips: null,
+    show: false,
     loading: false,
     error: null,
   },
@@ -46,17 +47,20 @@ const travelTipsSlice = createSlice({
     builder
       // Start loading when the fetchTravelTips async thunk is called
       .addCase(fetchTravelTips.pending, (state) => {
+        state.tips = null;
         state.loading = true;
         state.error = null;
       })
       // Update state with the fetched travel tips when successful
       .addCase(fetchTravelTips.fulfilled, (state, action) => {
         state.tips = action.payload;
+        state.show = true;
         state.loading = false;
       })
       // Update state with the error message when unsuccessful
       .addCase(fetchTravelTips.rejected, (state, action) => {
         state.error = action.error.message;
+        state.show = true;
         state.loading = false;
       });
   },

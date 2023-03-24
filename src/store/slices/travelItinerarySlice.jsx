@@ -31,6 +31,7 @@ const travelItinerarySlice = createSlice({
   // Set the initial state of the slice
   initialState: {
     itinerary: null, // Holds the generated itinerary
+    isShow: false,
     isLoading: false, // Set to true while the request is being made
     error: null, // Holds any error messages if the request fails
   },
@@ -41,18 +42,21 @@ const travelItinerarySlice = createSlice({
     // When the thunk is pending, set isLoading to true and reset the error message
     builder
       .addCase(fetchTravelItinerary.pending, (state) => {
+        state.itinerary = null;
         state.isLoading = true;
         state.error = null;
       })
       // When the thunk is fulfilled, store the generated itinerary in the state and set isLoading to false
       .addCase(fetchTravelItinerary.fulfilled, (state, action) => {
         state.itinerary = action.payload;
+        state.isShow = true;
         state.isLoading = false;
         state.error = null;
       })
       // When the thunk is rejected, set itinerary to null, isLoading to false, and store the error message in the state
       .addCase(fetchTravelItinerary.rejected, (state, action) => {
         state.itinerary = null;
+        state.isShow = true;
         state.isLoading = false;
         state.error = action.error.message;
       });

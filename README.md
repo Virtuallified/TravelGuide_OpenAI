@@ -1,6 +1,14 @@
 # Destination Form
 
-This is a simple React application that allows users to submit destination names and their duration of stay. The form data is validated on the client-side and then sent to a server API via Axios. The application uses Redux-Toolkit to manage the state of the form and the toaster messages.
+This is a feature-rich React application that enables users to submit their desired **destination** names and their corresponding **durations** of stay. To achieve efficient state management and optimized code structure, the application utilizes **Redux-Toolkit**, which provides a powerful set of tools and simplifies the process of writing Redux-related code.
+
+The form data is validated on the client-side, ensuring that the data submitted by **ReduxForm** is accurate and conforms to the necessary criteria. The data is then sent to a **OpenAI** server, which enables asynchronous communication between the client-side application and the server. This results in a faster and more responsive user experience.
+
+To manage the state of the application's data, the application makes use of Redux-Reducer slices. This enables the application to manage the data in a more organized and structured manner, simplifying the process of storing, updating, and retrieving data.
+
+Moreover, the application leverages **OpenAI** API like **ChatGPT** to enhance the user experience by providing smart suggestions and contextual tips based on the user's inputs.
+
+Overall, this application utilizes cutting-edge technology and techniques to provide an immersive user experience and optimized performance.
 
 ## Getting Started
 
@@ -11,6 +19,7 @@ To run this application locally, you'll need to have Node.js and NPM installed o
 3.  Run `npm install` to install the necessary dependencies.
 4.  Run `npm start` to start the development server.
 5.  Open `http://localhost:3000` in your browser to view the application.
+6.  Please update the .env file your own `OPENAI_API_TOKEN`
 
 ## Usage
 
@@ -24,8 +33,12 @@ This application uses the following dependencies:
 
 - React
 - Redux-Toolkit
+- ReduxForm
 - Axios
 - React-Bootstrap
+- React-Icons
+- UUIDv4
+- OpenAI
 
 ## File Structure
 
@@ -40,15 +53,23 @@ The project has the following file structure:
 │ │ │ ├── DestinationForm.jsx
 │ │ │ └── ...
 │ │ ├── layouts
-│ │ │ ├── Navbar.jsx
-│ │ │ ├── Toaster.jsx
+│ │ │ ├── DestinationForm.jsx
 │ │ │ └── ...
+│ │ ├── reusable
+│ │ │ ├── Toaster.jsx
 │ │ └── ...
+│ ├── config
+│ │ ├── RoutesConfig.js
+│ ├── logs
 │ ├── store
 │ │ ├── slices
 │ │ │ ├── destinationSlice.js
+│ │ │ ├── queryLogSlice.jsx
 │ │ │ ├── toastSlice.js
+│ │ │ ├── travelItinerarySlice.jsx
+│ │ │ ├── travelTipsSlice.jsx
 │ │ │ └── ...
+│ │ ├── rootReducer.js
 │ │ ├── store.js
 │ │ └── ...
 │ ├── styles
@@ -57,6 +78,7 @@ The project has the following file structure:
 │ ├── App.jsx
 │ ├── index.js
 │ └── ...
+├── .env
 ├── .gitignore
 ├── package.json
 ├── README.md

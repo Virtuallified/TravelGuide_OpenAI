@@ -40,35 +40,43 @@ export const { fetchDestinationsStart, fetchDestinationsSuccess, fetchDestinatio
 // Action creator that fetches client's IP address and dispatches both submitForm and logQuery actions
 
 // Define an async action creator to submit the form data
-export const submitForm = (values) => async (dispatch) => {
+export const submitForm = (values) => async (dispatch, getState) => {
   dispatch(fetchDestinationsStart()); // Dispatch the fetchDestinationsStart action
 
+  // Here, you can access any global state value (Not able to get recent state change)
+  const state = getState();
+  
   const { destination, duration} = values;
   // Fetch the client's IP address using an external API
   const response = await axios.get('https://api.ipify.org?format=json');
   const ipAddress = response.data.ip;
-  
+
   try {
     // Make a request to the ChatGPT server with the form data
-    dispatch(fetchTravelItinerary({ destination, duration }));
-    dispatch(fetchTravelTips(destination));
-    
+    const itineraryResponse = await dispatch(fetchTravelItinerary({ destination, duration }));
+    const itineraryError = itineraryResponse.error?.message;
+    const tipsResponse = await dispatch(fetchTravelTips(destination));
+    const tipsError = tipsResponse.error?.message;
     // Dispatch logQuery action with the appropriate payload
     dispatch(logQuery({ ipAddress, destination, duration, createdBy: 'user' }));
-
     // Dispatch the fetchDestinationsSuccess action with the response data
     dispatch(fetchDestinationsSuccess(response.data)); 
-    dispatch(showToast({ type: 'success', message: 'Destination added successfully' })); // Dispatch the showToast action with a success message
+
+    if (!itineraryError || !tipsError)
+      // Dispatch the showToast action with a success message
+      dispatch(showToast({ type: 'success', title: 'Success', message: 'Itinerary fetched successfully' }));
+    else 
+      dispatch(showToast({ type: 'success', title: 'Error', message: itineraryError }));
   } catch (error) {
     // Dispatch the fetchDestinationsFailure action with the error message
     dispatch(fetchDestinationsFailure(error.message)); 
     // Dispatch the showToast action with an error message
-    dispatch(showToast({ type: 'error', message: error.message }));
+    dispatch(showToast({ type: 'error', title: 'Error', message: error.message }));
   } finally {
     // Hide the toast message after 3 seconds
     setTimeout(() => {
       dispatch(hideToast());
-    }, 3000);
+    }, state.toast.delay);
   }
 };
 

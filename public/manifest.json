@@ -1,6 +1,6 @@
 {
-  "short_name": "Travel Guide",
-  "name": "Travel Guide - Itinerary",
+  "short_name": "Travel Guide - OpenAI",
+  "name": "Travel Guide - Itinerary - Powered by OpenAI",
   "icons": [
     {
       "src": "favicon.ico",
