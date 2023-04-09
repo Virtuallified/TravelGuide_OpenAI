@@ -5,6 +5,7 @@ import { submitForm } from '../../store/slices/destinationSlice';
 import { Form, Card, Button, Spinner } from 'react-bootstrap';
 import { FcHighPriority } from "react-icons/fc";
 import './destinationForm.style.css'; // import the CSS file
+import WeatherWidget from '../reusable/WeatherWidget';
 
 const validate = values => {
   const errors = {};
@@ -57,7 +58,7 @@ const DestinationForm = ({ handleSubmit, submitting, pristine }) => {
             <Card.Text>
               {isLoading && <p><Spinner animation="border" variant="info" /> Loading itinerary...</p>}
               {itinerary && <p>{itinerary}</p>}
-              {itineraryError && <p><FcHighPriority className="h5"/> Something went wrong!</p>}
+              {itineraryError && <p><FcHighPriority className="h5" /> Something went wrong!</p>}
             </Card.Text>
           </Card.Body>
         </Card>
@@ -71,11 +72,12 @@ const DestinationForm = ({ handleSubmit, submitting, pristine }) => {
             <Card.Text>
               {loading && <p><Spinner animation="border" variant="warning" /> Loading tips...</p>}
               {tips && <p>{tips}</p>}
-              {tipsError && <p><FcHighPriority className="h5"/> Something went wrong!</p>}
+              {tipsError && <p><FcHighPriority className="h5" /> Something went wrong!</p>}
             </Card.Text>
           </Card.Body>
         </Card>
       }
+      <WeatherWidget />
     </>
   );
 };

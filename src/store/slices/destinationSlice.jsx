@@ -4,6 +4,7 @@ import { showToast, hideToast } from './toastSlice';
 import { logQuery } from './queryLogSlice';
 import { fetchTravelTips } from './travelTipsSlice';
 import { fetchTravelItinerary } from './travelItinerarySlice'
+import { fetchWeatherForecast } from './WeatherSlice';
 
 const initialState = {
   loading: false,
@@ -45,8 +46,8 @@ export const submitForm = (values) => async (dispatch, getState) => {
 
   // Here, you can access any global state value (Not able to get recent state change)
   const state = getState();
-  
-  const { destination, duration} = values;
+
+  const { destination, duration } = values;
   // Fetch the client's IP address using an external API
   const response = await axios.get('https://api.ipify.org?format=json');
   const ipAddress = response.data.ip;
@@ -57,19 +58,27 @@ export const submitForm = (values) => async (dispatch, getState) => {
     const itineraryError = itineraryResponse.error?.message;
     const tipsResponse = await dispatch(fetchTravelTips(destination));
     const tipsError = tipsResponse.error?.message;
+    const weatherResponse = dispatch(fetchWeatherForecast(destination));
+    const weatherError = weatherResponse.error?.message;
+
     // Dispatch logQuery action with the appropriate payload
     dispatch(logQuery({ ipAddress, destination, duration, createdBy: 'user' }));
     // Dispatch the fetchDestinationsSuccess action with the response data
-    dispatch(fetchDestinationsSuccess(response.data)); 
+    dispatch(fetchDestinationsSuccess(response.data));
 
-    if (!itineraryError || !tipsError)
+    if (!itineraryError)
       // Dispatch the showToast action with a success message
       dispatch(showToast({ type: 'success', title: 'Success', message: 'Itinerary fetched successfully' }));
-    else 
-      dispatch(showToast({ type: 'success', title: 'Error', message: itineraryError }));
+    else if (tipsError)
+      dispatch(showToast({ type: 'error', title: 'Error', message: tipsError }));
+    else if (weatherError)
+      dispatch(showToast({ type: 'warning', title: 'Warning', message: weatherError }));
+    else
+      dispatch(showToast({ type: 'error', title: 'Error', message: itineraryError }));
+
   } catch (error) {
     // Dispatch the fetchDestinationsFailure action with the error message
-    dispatch(fetchDestinationsFailure(error.message)); 
+    dispatch(fetchDestinationsFailure(error.message));
     // Dispatch the showToast action with an error message
     dispatch(showToast({ type: 'error', title: 'Error', message: error.message }));
   } finally {

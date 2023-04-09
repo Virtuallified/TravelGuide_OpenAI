@@ -5,6 +5,7 @@ import toastReducer from './slices/toastSlice';
 import itineraryReducer from './slices/travelItinerarySlice';
 import tipsReducer from './slices/travelTipsSlice';
 import logReducer from './slices/queryLogSlice';
+import WeatherReducer from './slices/WeatherSlice';
 
 const rootReducer = combineReducers({
   form: formReducer, // include formReducer in the combineReducers call
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   travelItinerary: itineraryReducer,  // Pass in the travelItineraryReducer as a slice to the store
   travelTips: tipsReducer,  // Travel Tips
   queryLog: logReducer,   // Log query
+  weatherForecast: WeatherReducer // Weather data
 });
 
 export default rootReducer;
