@@ -19,7 +19,8 @@ To run this application locally, you'll need to have Node.js and NPM installed o
 3.  Run `npm install` to install the necessary dependencies.
 4.  Run `npm start` to start the development server.
 5.  Open `http://localhost:3000` in your browser to view the application.
-6.  Please update the .env file your own `OPENAI_API_TOKEN`
+6.  Create your own API Key from `https://platform.openai.com` & `https://home.openweathermap.org`
+7.  Please update the .env file your own `OPENAI_API_TOKEN` & `OWM_API_TOKEN`
 
 ## Usage
 
